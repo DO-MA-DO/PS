@@ -2,31 +2,16 @@
 #include <vector>
 
 using namespace std;
-char moum[5] = {'A', 'E', 'I', 'O', 'U'};
-int idx = 0;
-int ans;
-bool found = false;
-
-void nHm(string str, string word) {
-    if(found) return;
-    if(str.length() > 5) return;
-    if(str.length() >= 1) idx++;
-    if(str == word) {
-        ans = idx;
-        found = true;
-        return;
-    }
-    
-    for(int i = 0; i<5; i++) {
-        string tmp(str);
-        tmp += moum[i];
-        nHm(tmp, word);
-    }
-}
+int arr[5] = {781, 156, 31, 6, 1};
 
 int solution(string word) {
     int answer = 0;
-    nHm("", word);
-    answer = ans;
+    for(int i = 0; i<word.length(); i++) {
+        if(word[i]=='A') answer += arr[i]*0 + 1;
+        else if(word[i] == 'E') answer += arr[i]*1 + 1;
+        else if(word[i] == 'I') answer += arr[i]*2 + 1;
+        else if(word[i] == 'O') answer += arr[i]*3 + 1;
+        else if(word[i] == 'U') answer += arr[i]*4 + 1;
+    }
     return answer;
 }

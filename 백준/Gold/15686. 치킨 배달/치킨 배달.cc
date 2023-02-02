@@ -10,12 +10,12 @@ struct Point {
 int N, M;
 vector<Point> chickPoint;
 vector<Point> housePoint;
-vector<int> chickDiss;
 int dosiMinchickDis = 10000000;
 
 vector<int> nCm;
 void backtracking(int start) {
 	if (nCm.size() == M) {
+        int dosiChickDis = 0;
 		for (auto house : housePoint) {
 			int minChickDis = 1000000;
 			for (auto chickIdx : nCm) {
@@ -24,11 +24,8 @@ void backtracking(int start) {
 				chickDis += abs(chickPoint[chickIdx].y - house.y);
 				if (chickDis < minChickDis) minChickDis = chickDis;
 			}
-			chickDiss.push_back(minChickDis);
+            dosiChickDis += minChickDis;
 		}
-		int dosiChickDis = 0;
-		for (auto i : chickDiss) dosiChickDis += i;
-		chickDiss.clear();
 		if (dosiChickDis < dosiMinchickDis) dosiMinchickDis = dosiChickDis;
 		return;
 	}

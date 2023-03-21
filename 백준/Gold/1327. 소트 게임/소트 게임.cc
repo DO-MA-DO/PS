@@ -27,9 +27,7 @@ int bfs() {
 
 		for (int i = 0; i <= max_idx; i++) {
 			string newstring(cur);
-			for (int j = 0; j < (K / 2); j++) {
-				swap(newstring[i + j], newstring[i + K - 1 - j]);
-			}
+			reverse(newstring.begin() + i, newstring.begin() + i + K);
 			if (um.find(newstring) == um.end()) {
 				um.insert({newstring, true});
 				q.push({ newstring, cnt + 1 });

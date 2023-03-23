@@ -7,7 +7,7 @@ int main() {
 	char susik[101];
 	scanf("%s", susik);
 
-	//우선순위: +- < */ < (어쩌구)
+	//우선순위: +- < */ < 괄호 -> 괄호 안에서는 바뀔수있음
 	int str_len = strlen(susik);
 	stack<char> s;
 	for (int i = 0; i < str_len; i++) {
@@ -23,34 +23,30 @@ int main() {
 			s.push(susik[i]);
 			continue;
 		}
-		if (susik[i] == '*' || susik[i] == '/') {
-			if (s.top() == ')') {
-				s.pop();//괄호 출력안함
-				while (s.top() != '(') {
-					printf("%c", s.top());
-					s.pop();
-				}
-				s.pop();//괄호 출력안함
+
+		//넣어주기 전에 괄호 있다면 괄호 먼저 제거
+		//(수식)(수식) 이렇게 안들어와서 가능함
+		//(수식)operator(수식) 이니까 무조건 괄호 제거해야함
+		if (s.top() == ')') {
+			s.pop();//괄호 출력안함
+			while (s.top() != '(') {
+				printf("%c", s.top());
+				s.pop();
 			}
-			//*/ 없애기
+			s.pop();//괄호 출력안함
+		}
+
+		if (susik[i] == '*' || susik[i] == '/') {
+			//*/만 없애기
 			while (!s.empty() && (s.top() == '*' || s.top() == '/')) {
 				printf("%c", s.top());
 				s.pop();
-				if (s.empty()) break;
 			}
 			s.push(susik[i]);
 		}
 		else if (susik[i] == '+' || susik[i] == '-') {
-			if (s.top() == ')') {
-				s.pop();//괄호 출력안함
-				while (s.top() != '(') {
-					printf("%c", s.top());
-					s.pop();
-				}
-				s.pop();//괄호 출력안함
-			}
-			//다 없애면 안되고.... 괄호 안은 냄겨야됨
-			while (!s.empty() && (s.top() == '+' || s.top() == '-' || s.top() == '*' || s.top() == '/')) {
+			//*/+- 없애기... 경우의 수가 */+-( 이렇게 다섯개임
+			while (!s.empty() && s.top() != '(') {
 				printf("%c", s.top());
 				s.pop();
 			}

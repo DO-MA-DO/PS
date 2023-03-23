@@ -2,7 +2,7 @@
 #define MOD 1000000000
 using namespace std;
 
-long long pas[402][201];
+int pas[402][201];
 
 int main() {
 	int N, K;

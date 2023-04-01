@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-string str = "";
+string str;;
 
 void solve(int si, int len) {
 	if (len == 1) return;
@@ -19,11 +19,8 @@ void solve(int si, int len) {
 int main() {
 	int N;
 	while (scanf("%d", &N) != EOF) {
-		str = "";
-		int cnt = pow(3, N);
-		while (cnt--) {
-			str += '-';
-		}
+		str.clear();
+		str.append(pow(3, N), '-');
 		solve(0, pow(3, N));
 		printf("%s\n", str.c_str());
 	}

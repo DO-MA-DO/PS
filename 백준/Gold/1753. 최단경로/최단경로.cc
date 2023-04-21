@@ -2,72 +2,70 @@
 #include <algorithm>
 #include <vector>
 #include <queue>
-#define INF 200001
+#define INF 500000
 using namespace std;
 
+struct info {
+	int node, shdis;
+};
+
 struct edge {
-	int node, w_shdis;
+	int node, w;
 };
 
 struct cmp {
-	bool operator()(const edge& e1, const edge& e2) {
-		return e1.w_shdis > e2.w_shdis;
+	bool operator()(const info& i1, const info& i2) {
+		return i1.shdis > i2.shdis;
 	}
 };
 
-vector<edge> adjList[20001];
-priority_queue<edge ,vector<edge>, cmp> toStart;
-int shdis[20001];
-bool visit[20001];
+priority_queue<info, vector<info>, cmp>pq;
+vector<edge> adj_list[20001];
+int dis[20001];
 
 int main() {
 	int V, E;
 	scanf("%d%d", &V, &E);
-	for (int i = 1; i <= V; i++) shdis[i] = INF;
+	for (int i = 1; i <= V; i++) {
+		dis[i] = INF;
+	}
+
 	int K;
 	scanf("%d", &K);
-	shdis[K] = 0;
-	toStart.push({ K, 0 });
+	pq.push({ K, 0 });
+	dis[K] = 0;
 
 	int u, v, w;
 	while (E--) {
 		scanf("%d%d%d", &u, &v, &w);
-		bool is_dup = false;
-		for (int i = 0; i < adjList[u].size(); i++) {
-			int connected_node = adjList[u][i].node;
-			int old_weight = adjList[u][i].w_shdis;
-			if (connected_node == v) {
-				adjList[u][i].w_shdis = min(old_weight, w);
-				is_dup = true;
+		bool dup = false;
+		for (int i = 0; i < adj_list[u].size(); i++) {
+			if (adj_list[u][i].node == v) {
+				if (adj_list[u][i].w > w) adj_list[u][i].w = w;
+				dup = true;
 				break;
 			}
 		}
-		if (!is_dup) adjList[u].push_back({ v, w });
+		if (!dup) adj_list[u].push_back({ v, w });
 	}
+	
+	//dijk
+	while (!pq.empty()) {
+		int cur = pq.top().node;
+		int cur_shdis = pq.top().shdis;
+		pq.pop();
 
-	while (!toStart.empty()) {
-		int cur = toStart.top().node;
-		int cur_shdis = toStart.top().w_shdis;
-		toStart.pop();
-
-		visit[cur] = true;
-
-		if (cur_shdis > shdis[cur]) continue;
-
-		for (edge next_e : adjList[cur]) {
-			int next = next_e.node;
-			int next_shdis = shdis[cur] + next_e.w_shdis;
-			if (visit[next]) continue;
-
-			if (shdis[next] > next_shdis) {
-				shdis[next] = next_shdis;
-				toStart.push({next, next_shdis });
+		if (cur_shdis > dis[cur]) continue;
+		for (edge e : adj_list[cur]) {
+			int next = e.node;
+			if (cur_shdis + e.w < dis[next]) {
+				dis[next] = cur_shdis + e.w;
+				pq.push({ next, dis[next] });
 			}
 		}
 	}
-
 	for (int i = 1; i <= V; i++) {
-		if (shdis[i] == INF) printf("INF\n");
-		else printf("%d\n", shdis[i]);
+		if (dis[i] == INF) printf("INF\n");
+		else printf("%d\n", dis[i]);
 	}
 }
